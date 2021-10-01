@@ -31,7 +31,7 @@ public class User implements UserDetails {
             joinColumns = @JoinColumn(name = "user_id"),
             inverseJoinColumns = @JoinColumn(name = "role_id")
     )
-    private Set<Role> roles = new HashSet<Role>(Collections.singleton(new Role(2,"ROLE_USER")));
+    private Set<Role> roles;//= new HashSet<Role>(Collections.singleton(new Role(2,"ROLE_USER")));
 
     public User() {
     }

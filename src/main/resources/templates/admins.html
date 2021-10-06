@@ -54,13 +54,13 @@
         <div class="col-2">
             <div class="list-group nav nav-pills flex-column" role="tablist">
                 <a class="nav-link active" id="nav-admin-view" data-toggle="list" sec:authorize="hasRole('ROLE_ADMIN')"
-                   href="#oneBl" role="list" aria-controls="oneBl" aria-selected="true">Admin</a>
+                   href="#adminDiv" role="list" aria-controls="adminDiv" aria-selected="true">Администратор</a>
                 <a class="nav-link" id="nav-user-view" data-toggle="list" sec:authorize="hasRole('ROLE_USER')"
-                   href="#twoBl" role="list" aria-controls="oneBl" aria-selected="false">User</a>
+                   href="#userDiv" role="list" aria-controls="userDiv" aria-selected="false">Пользователь</a>
             </div>
         </div>
             <div class=" col-10 p-5 mb-2 tab-content bg-light" >
-                <div class="tab-pane fade show active" id="oneBl" sec:authorize="hasRole('ROLE_ADMIN')" aria-labelledby="nav-admin-view">
+                <div class="tab-pane fade show active" id="adminDiv" sec:authorize="hasRole('ROLE_ADMIN')" aria-labelledby="nav-admin-view">
                     <h1>Admin panel</h1>
                     <nav>
                         <div class="nav nav-tabs" id="nav-tab" role="tablist">
@@ -158,7 +158,7 @@
                         </div>
                     </div>
                 </div>
-                <div class="tab-pane fade show" id="twoBl" sec:authorize="hasRole('ROLE_USER')" aria-labelledby="nav-user-view">
+                <div class="tab-pane fade show" id="userDiv" sec:authorize="hasRole('ROLE_USER')" aria-labelledby="nav-user-view">
                     <h1>User information-page</h1>
                     <ul class="nav nav-tabs" role="tablist">
                         <li class="nav-item">

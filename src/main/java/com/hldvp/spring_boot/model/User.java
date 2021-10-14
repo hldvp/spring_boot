@@ -1,6 +1,7 @@
 package com.hldvp.spring_boot.model;
 
 import org.springframework.security.core.userdetails.UserDetails;
+import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 
 import javax.persistence.*;
 import java.util.Collections;
@@ -40,7 +41,9 @@ public class User implements UserDetails {
         this.name = name;
         this.username = email;
         this.roles = roles;
-        this.password = password;
+        BCryptPasswordEncoder passwordEncoder = new BCryptPasswordEncoder();
+        String hashedPassword = passwordEncoder.encode(password);
+        this.password = hashedPassword;
     }
 
     public Long getId() {
@@ -60,7 +63,9 @@ public class User implements UserDetails {
     }
 
     public void setPassword(String password) {
-        this.password = password;
+        BCryptPasswordEncoder passwordEncoder = new BCryptPasswordEncoder();
+        String hashedPassword = passwordEncoder.encode(password);
+        this.password = hashedPassword;
     }
 
     public void setName(String name) {

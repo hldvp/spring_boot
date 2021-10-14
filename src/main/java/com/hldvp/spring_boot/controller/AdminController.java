@@ -1,69 +1,47 @@
 package com.hldvp.spring_boot.controller;
 
 import com.hldvp.spring_boot.model.User;
-import com.hldvp.spring_boot.service.RoleService;
 import com.hldvp.spring_boot.service.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.stereotype.Controller;
-import org.springframework.ui.Model;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
-import java.security.Principal;
+import java.util.List;
 
-
-@Controller
-@RequestMapping()
+@RestController
+@RequestMapping("/api")
 public class AdminController {
 
     @Autowired
     private UserService userService;
 
-    @Autowired
-    private RoleService roleService;
-
-    @GetMapping("/admins")
-    public String allUser(Model model){
-        model.addAttribute("users",userService.getAllUsers());
-        model.addAttribute("roles",roleService.getAllRoles());
-        model.addAttribute("user", new User());
-        return "/admins";
+    @GetMapping("/users")
+    public ResponseEntity<List<User>> showAllUsers() {
+        return new ResponseEntity<>(userService.getAllUsers(), HttpStatus.OK);
     }
 
-    @GetMapping("/user")
-    public String helloUser(Principal principal, Model model){
-        //model.addAttribute("user", userService.getUserByUsername(principal.getName()));
-        return "/user";
+    @GetMapping("/users/{id}")
+    public ResponseEntity<User> showUser(@PathVariable long id) {
+        return new ResponseEntity<>(userService.getUserById(id),HttpStatus.OK );
     }
 
-//    @GetMapping("/new")
-//    public String addNewUser(Model model){
-//        model.addAttribute("user", new User());
-//        return "/new";
-//    }
-
-    @PostMapping("/admins")
-    public String createUser(@ModelAttribute("user") User user,
-                             @RequestParam(value = "select_role", required = false) String[] role){
-        userService.saveUser(user, role);
-        return "redirect:/admins";
+    @PostMapping("/users")
+    public ResponseEntity<?> addNewUser(@RequestBody User user) {
+        System.out.println(user);
+        userService.saveUser(user);
+        return new ResponseEntity<>(HttpStatus.CREATED);
     }
 
-//    @GetMapping("/{id}/update")
-//    public String editUser(@PathVariable("id") long id, Model model){
-//        model.addAttribute("user", userService.getUserById(id));
-//        return "update";
-//    }
-
-    @PatchMapping("/{id}")
-    public String updateUser(@ModelAttribute("user") User user,
-                             @RequestParam(value = "select_role",required = false) String[] role){
-        userService.saveUser(user, role);
-        return "redirect:/admins";
+    @PutMapping("/users")
+    public ResponseEntity<?> updateUser (@RequestBody User user) {
+        userService.saveUser(user);
+        return new ResponseEntity<>(HttpStatus.OK);
     }
 
-    @DeleteMapping("/{id}")
-    public String delete(@PathVariable("id") long id){
+    @DeleteMapping("/users/{id}")
+    public ResponseEntity<?> deleteUser (@PathVariable("id") long id) {
         userService.deleteUser(id);
-        return "redirect:/admins";
+        return new ResponseEntity<>(HttpStatus.OK);
     }
 }

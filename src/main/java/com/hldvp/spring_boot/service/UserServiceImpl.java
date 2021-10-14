@@ -33,19 +33,24 @@ public class UserServiceImpl implements UserService {
     }
 
     @Override
-    public void saveUser(User user, String[] roles) {
-        Set<Role> updateRole = new HashSet<>();
-        for(String role : roles) {
-            if(role.equals("ROLE_ADMIN")) {
-                updateRole.add(new Role(1L, role));
-            }
-            else {
-                updateRole.add(new Role(2L, role));
-            }
-        }
-        user.setRoles(updateRole);
+    public void saveUser(User user) {
         userRepository.save(user);
     }
+
+    //    @Override
+//    public void saveUser(User user, String[] roles) {
+//        Set<Role> updateRole = new HashSet<>();
+//        for(String role : roles) {
+//            if(role.equals("ROLE_ADMIN")) {
+//                updateRole.add(new Role(1L, role));
+//            }
+//            else {
+//                updateRole.add(new Role(2L, role));
+//            }
+//        }
+//        user.setRoles(updateRole);
+//        userRepository.save(user);
+//    }
 
     @Override
     public void deleteUser(long id) {

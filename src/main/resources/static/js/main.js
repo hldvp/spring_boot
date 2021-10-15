@@ -3,12 +3,10 @@ $(document).ready(function (){
     $('.btn-success').on('click', function (event) {
         let user = {
             name: $("#new_name").val(),
-
             username: $("#new_username").val(),
             password: $("#new_password").val(),
             roles: getRole("#new_role")
         }
-        alert(user.name);
 
         fetch("api/users", {
             method: "POST",
@@ -42,10 +40,10 @@ function createTableRow(u) {
             <td>*************</td>
             <td>${userRole}</td>
             <td>
-            <a  href="/api/${u.id}" id="eBtn" class="btn btn-info eBtn" >Edit</a>
+            <a  href="/api/users/${u.id}" id="eBtn" class="btn btn-info eBtn" >Edit</a>
             </td>
             <td>
-            <a  href="/api/delete/${u.id}" id="delBtn" class="btn btn-danger delBtn">Delete</a>
+            <a  href="/api/users/${u.id}" id="delBtn" class="btn btn-danger delBtn">Delete</a>
             </td>
         </tr>`;
 }
@@ -86,11 +84,11 @@ function checkUsername() {
             return resp.json()
         })
         .then(resBody => {
-            console.log(resBody);
+            // console.log(resBody);
             rez = resBody.map(userName => {
                 return userName.username
             })
-            console.log(rez)
+            // console.log(rez)
         })
 }
 
@@ -108,37 +106,73 @@ document.addEventListener('click', function (event) {
 
     if ($(event.target).hasClass('eBtn')) {
         let href = $(event.target).attr("href");
-        $(".editUser #exampleModal").modal();
+        $("#exampleModal").modal();
+        // console.log(href);
 
-        $.get(href, function (user) {
-            $(".editUser #id").val(user.id);
-            $(".editUser #nameEd").val(user.name);
-            $(".editUser #ageEd").val(user.age);
-            $(".editUser #usernameEd").val(user.username);
-            $(".editUser #passwordEd").val(user.password);
-            $(".editUser #selectRoleEd").val(user.roles);
-        });
+        fetch(href)
+            .then((response) => {
+                response.json()
+                    .then(user => {
+                        $("#add_id").val(user.id);
+                        $("#add_name").val(user.name);
+                        $("#add_username").val(user.username);
+                        $("#add_password").val(user.password);
+                        $("#add_role").val();
+                    })
+            })
     }
-    if ($(event.target).hasClass('editButton')) {
+    if ($(event.target).hasClass('add_btn')) {
         let user = {
-            id: $('#id').val(),
-            name: $('#nameEd').val(),
-            age: $('#ageEd').val(),
-            username: $('#usernameEd').val(),
-            password: $('#passwordEd').val(),
-            roles: getRole("#selectRoleEd")
+            id: $('#add_id').val(),
+            name: $('#add_name').val(),
+            username: $('#add_username').val(),
+            password: $('#add_password').val(),
+            roles: getRole("#add_role")
         }
-        console.log(user);
-        if (validModal() === true) {
-            editModalButton(user)
-        }
-
+        addUser(user);
     }
 
     if ($(event.target).hasClass('logout')) {
         logout();
     }
-    if ($(event.target).hasClass('btnUserTable')) {
-        userTable();
-    }
+    // if ($(event.target).hasClass('btnUserTable')) {
+    //     userTable();
+    // }
 });
+
+function delModalButton(href) {
+    fetch(href, {
+        method: "DELETE"
+    })
+        .then(() => showAllUsers())
+}
+
+function logout () {
+    document.location.replace("/logout");
+}
+
+function getUser(href) {
+    let user;
+    fetch(href)
+        .then((response) => {
+            response.json()
+                .then(data => {
+                    user = data
+                })
+        })
+    return user;
+}
+
+function addUser (user) {
+    fetch("api/users", {
+        method: "PUT",
+        headers:{
+            "Content-Type": "application/json;charset=utf-8"
+        },
+        body:JSON.stringify(user)
+    })
+        .then(function (){
+            $("#exampleModal").modal('hide');
+            showAllUsers();
+        })
+}
